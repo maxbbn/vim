@@ -1,0 +1,23 @@
+h1 All Rates
+#page
+- if (result.length)
+  ul.ratelist
+    - result.forEach(function(item){
+    li
+      p.title
+        a(href='/getrate/' + item.id)=item.title
+      p.name
+        span=item.name
+      div.rate
+        - item.rates.forEach(function(r){
+          span.item=r
+        - })
+        span=item.value
+      p.id _id : 
+        span=item._id
+      p.id id : 
+        span=item.id
+      p.score=item.score
+    - })
+- else
+  p result is empty

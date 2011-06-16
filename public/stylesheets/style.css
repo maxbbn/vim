@@ -6,3 +6,41 @@ body {
 a {
   color: #00B7FF;
 }
+.ratelist {
+    list-style:none;
+    padding:0;
+    border-top:1px solid #888;
+}
+.ratelist li {
+    border-bottom:1px solid #888;
+    position:relative;
+    padding-left:400px;
+}
+.rate .item {
+    display:inline-block;
+    width:20px;
+    height:20px;
+    line-height:20px;
+    text-align:center;
+    color:#ddd;
+    background:#444;
+    margin:10px;
+    font-size:16px;
+}
+.ratelist .title {
+    font-weight:bold;
+}
+.ratelist .score {
+    position:absolute;
+    top:0;
+    left:0;
+    margin:0;
+    padding:0;
+    font-size:200px;
+    font-family:aril;
+    line-height:110px;
+    color:#AAA;
+}
+.ratelist .id {
+    color:#999;
+}

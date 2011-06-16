@@ -2,13 +2,22 @@
  * Module dependencies.
  */
 
+//var ejs =  require('ejs');
 var express = require('express');
 
 var mongod = require('mongodb');
 
-var app = module.exports = express.createServer();
+var app = module.exports = express.createServer(); // Configuration
 
-// Configuration
+function avi (arr){
+    var sum = 0;
+    var len = arr.length;
+    arr.forEach(function(v){
+        sum += v;
+    });
+    if(len === 0 ) return 0;
+    return Math.round(sum / len * 100)/100;
+}
 
 app.configure(function(){
   app.set('views', __dirname + '/views');
@@ -52,7 +61,7 @@ app.get('/insert/:data', function(req, res){
     console.log(doc);
     doc.name = encodeURIComponent(doc.name);
     doc.title = encodeURIComponent(doc.title);
-    doc.ts_save = new Date();
+    doc.ts_save = new Date().getTime();
 
     if(!doc){
         res.send("error");
@@ -72,20 +81,27 @@ app.get('/insert/:data', function(req, res){
 
 //** jsonp
 app.get('/getrate/:rid', function(req, res){
-    var rateid = parseInt(req.params.rid,16);
-    var query = rateid?{"_id" : rateid}:{};
+    var rateid = req.params.rid;
+    var query = rateid?{"id" : rateid}:{};
+    var callback = req.param("callback");
     var result = {};
 
     db.open(function(err,db){
         db.collection("rate", function(err,collection){
-            collection.find(query,function(err,cursor){
+            collection.find(query,{limit:1}, function(err,cursor){
                 cursor.each(function(err,rate){
-                    console.log(rate);
+                    var json;
                     if(rate !== null) {
                         result = rate;
                     }
                     if(rate === null){
-                        res.send(req.param("callback") + "(" + JSON.stringify(result) + ")");
+                        json = JSON.stringify(result),
+                        res.header('Content-Type','text/plain');
+                        if(callback){
+                            res.send(callback+"("+json+")");
+                        }else{
+                            res.send(json);
+                        }
                         db.close();
                     }
                 });
@@ -94,8 +110,38 @@ app.get('/getrate/:rid', function(req, res){
     });
 });
 
-app.get('/list/:rid',function(req,res){
-    
+app.get('/list/',function(req,res){
+    var query = {},
+        result = [];
+    db.open(function(err,db){
+        db.collection("rate", function(err,collection){
+            collection.find(
+                query,
+                {
+                    'sort' : ["ts_save","esc"]
+                },
+                function(err,cursor){
+                    cursor.each(function(err,doc){
+                        if(doc !== null ){
+                            doc.title = decodeURIComponent(doc.title);
+                            doc.name = decodeURIComponent(doc.name);
+                            result.push(doc);
+                            if(doc.rates && doc.rates.length){
+                                doc.score = avi(doc.rates);
+                            }else{
+                                doc.score = 0;
+                            }
+                        }else{
+                            res.render("list", {
+                                result : result,
+                                title : "All Rate"
+                            })
+                            db.close();
+                        }
+                    });
+                });
+        });
+    });
 });
 
 app.listen(3000);
