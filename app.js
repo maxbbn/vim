@@ -118,7 +118,7 @@ app.get('/list/',function(req,res){
             collection.find(
                 query,
                 {
-                    'sort' : ["ts_save","esc"]
+                    'sort' : [["ts_save","desc"]]
                 },
                 function(err,cursor){
                     cursor.each(function(err,doc){
