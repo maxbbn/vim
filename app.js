@@ -2,9 +2,7 @@
  * Module dependencies.
  */
 
-//var ejs =  require('ejs');
 var express = require('express');
-
 var mongod = require('mongodb');
 
 var app = module.exports = express.createServer(); // Configuration
