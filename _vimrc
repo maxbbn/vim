@@ -57,11 +57,9 @@ set t_vb= " close visual bell
 set ruler " 显示标尺
 set number " 行号
 set rulerformat=%15(%c%V\ %p%%%)
-
-" 搜索
+"搜索
 set hlsearch  " 高亮显示搜索的内容
 set noincsearch " 关闭显示查找匹配过程
-
 set magic "Set magic on, for regular expressions
 
 " 命令行于状态行
@@ -115,6 +113,8 @@ set whichwrap=b,s,<,>,[,]
 set ignorecase
 set smartcase
 
+"
+set clipboard+=unnamed
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Files, backups and undo
@@ -170,9 +170,10 @@ endif
 if has('syntax')
     " 保证语法高亮
     syntax on
+
     if has('gui_running')
         colorscheme zenburn
-        "colorscheme no_quarter
+
         let g:colors_name="zenburn"
     endif
 
@@ -201,9 +202,9 @@ if has('gui_running')
             \set guioptions+=m <Bar>
         \endif<CR>
 
-    if has("unix") && !has('gui_macvim')
+    "if has("unix") && !has('gui_macvim')
         "set guifont=Courier\ 11\ Pitch\ 12
-    endif
+    "endif
 endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -211,15 +212,15 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Map space to / (search) and c-space to ? (backgwards search)
-map <space> /
+" map <space> /
 map <c-space> ?
 map <silent> <leader><cr> :noh<cr>
 
 " Smart way to move btw. windows
-map <C-j> <C-W>j
-map <C-k> <C-W>k
-map <C-h> <C-W>h
-map <C-l> <C-W>l
+"map <C-j> <C-W>j
+"map <C-k> <C-W>k
+"map <C-h> <C-W>h
+"map <C-l> <C-W>l
 
 " Close the current buffer
 map <leader>bd :Bclose<cr>
@@ -232,10 +233,11 @@ map <right> :bn<cr>
 map <left> :bp<cr>
 
 " Tab configuration
-map <leader>tn :tabnew<cr>
-map <leader>te :tabedit
-map <leader>tc :tabclose<cr>
-map <leader>tm :tabmove
+map <C-t> :tabnew<cr>
+map <C-k> :tabclose<cr>
+map <C-Tab> :tabnext<cr>
+map <C-n> :tabnext<cr>
+map <C-p> :tabprevious<cr>
 
 " When pressing <leader>cd switch to the directory of the open buffer
 map <leader>cd :cd %:p:h<cr>
@@ -273,8 +275,15 @@ endtry
 " =====================
 "zencoding
 let g:user_zen_settings = {
-\  'indentation' : '  ',
+\  'indentation' : '    ',
 \  'lang' : 'zh-CN',
 \}
 let g:user_zen_expandabbr_key = '<c-e>'
 let g:use_zen_complete_tag = 1
+
+"NERD_commenter
+let NERDShutUp = 1
+map <c-h> ,c<space>
+
+"neo complomplache
+let g:neocomplcache_min_syntax_length = 3
