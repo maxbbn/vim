@@ -1,0 +1,20 @@
+h1 Create
+p Crate a Rate
+
+form(action='/create', method="post")
+  ul.form
+    li
+      label(for="input_user") 用户名
+      br
+      input#input_user(name="author")
+    li
+      label(for="input_title") 分享标题
+      br
+      input#input_title(name="title")
+    li
+      label(for="input_other") 备注
+      br
+      input#input_other(name="other")
+    li
+      button(type="submit") 提交
+

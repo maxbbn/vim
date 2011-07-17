@@ -6,6 +6,7 @@ var express = require('express');
 var mongod = require('mongodb');
 
 var app = module.exports = express.createServer(); // Configuration
+var db;
 
 function avi (arr){
     var sum = 0;
@@ -27,20 +28,29 @@ app.configure(function(){
 });
 
 app.configure('development', function(){
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
+    console.log("development");
+    app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
+    db = new mongod.Db(
+        'firebird_dev',
+        new mongod.Server('127.0.0.1', 27017),
+        {
+            native_parser:false
+        }
+    );
+
 });
 
 app.configure('production', function(){
-  app.use(express.errorHandler());
+    console.log("production");
+    app.use(express.errorHandler());
+    db = new mongod.Db(
+        'firebird',
+        new mongod.Server('127.0.0.1', 27017),
+        {
+            native_parser:false
+        }
+    );
 });
-
-var db = new mongod.Db(
-    'firebird',
-    new mongod.Server('127.0.0.1', 27017),
-    {
-        native_parser:true
-    }
-);
 
 // Routes
 
@@ -55,8 +65,6 @@ app.get('/insert/:data', function(req, res){
     var doc;
 
     doc = JSON.parse(req.params.data);
-    console.log(req.params.data);
-    console.log(doc);
     doc.name = encodeURIComponent(doc.name);
     doc.title = encodeURIComponent(doc.title);
     doc.ts_save = new Date().getTime();
@@ -75,6 +83,38 @@ app.get('/insert/:data', function(req, res){
         });
     });
 
+});
+
+app.get('/create',function(req,res){
+  res.render('create', {
+    title: 'Express'
+  });
+});
+
+app.post('/create',function(req,res){
+    var doc = {};
+    doc.author = encodeURIComponent(req.param("author"));
+    doc.title = encodeURIComponent(req.param("title"));
+    doc.other = encodeURIComponent(req.param("other"));
+    doc.ts_save = new Date().getTime();
+
+    if(!doc){
+        res.send("error");
+        return;
+    }
+
+    db.open(function(err,db){
+        db.collection("rate", function(err,collection){
+            collection.insert(doc,function(err, doc){
+                var outdata = {
+                    title : "Success!",
+                    data : doc
+                };
+                res.render('create-ok', outdata);
+                db.close();
+            });
+        });
+    });
 });
 
 //** jsonp
@@ -108,9 +148,10 @@ app.get('/getrate/:rid', function(req, res){
     });
 });
 
-app.get('/list/',function(req,res){
+app.get('/list',function(req,res){
     var query = {},
         result = [];
+
     db.open(function(err,db){
         db.collection("rate", function(err,collection){
             collection.find(
@@ -130,6 +171,7 @@ app.get('/list/',function(req,res){
                                 doc.score = 0;
                             }
                         }else{
+                            console.log("list", result.length, result[0]);
                             res.render("list", {
                                 result : result,
                                 title : "All Rate"
@@ -142,5 +184,7 @@ app.get('/list/',function(req,res){
     });
 });
 
+
 app.listen(3000);
+
 console.log("Express server listening on port %d", app.address().port);
