@@ -37,7 +37,6 @@ app.configure('development', function(){
             native_parser:false
         }
     );
-
 });
 
 app.configure('production', function(){
@@ -67,7 +66,8 @@ app.get('/insert/:data', function(req, res){
     doc = JSON.parse(req.params.data);
     doc.name = encodeURIComponent(doc.name);
     doc.title = encodeURIComponent(doc.title);
-    doc.ts_save = new Date().getTime();
+    var data = new Date();
+    doc.ts_save = date.getTime();
 
     if(!doc){
         res.send("error");
@@ -87,7 +87,7 @@ app.get('/insert/:data', function(req, res){
 
 app.get('/create',function(req,res){
   res.render('create', {
-    title: 'Express'
+    title: 'Create a Cate'
   });
 });
 
@@ -112,6 +112,42 @@ app.post('/create',function(req,res){
                 };
                 res.render('create-ok', outdata);
                 db.close();
+            });
+        });
+    });
+});
+
+//show a rate
+app.get('/show/:rid', function(req, res){
+    var rateid = req.params.rid;
+    var query = {"_id" : mongod.BSONPure.ObjectID(rateid)};
+    var result = {};
+
+    db.open(function(err,db){
+        db.collection("rate", function(err,collection){
+            console.log("querying : " + query);
+            collection.find(query,{limit:1}, function(err,cursor){
+                cursor.each(function(err,rate){
+
+                    var json, date;
+
+                    if(rate !== null) {
+                        result = rate;
+                    }
+
+                    if(rate === null){
+                        console.log(result.ts_save,result.ts_save);
+                        date = new Date(result.ts_save);
+                        res.render('showrate', {
+                            title : result.title + " - rate",
+                            r_dateSave : date.toLocaleDateString() + date.toLocaleTimeString(),
+                            r_title : decodeURIComponent(result.title),
+                            r_author : decodeURIComponent(result.author),
+                            _id : result._id
+                        });
+                        db.close();
+                    }
+                });
             });
         });
     });
@@ -171,7 +207,6 @@ app.get('/list',function(req,res){
                                 doc.score = 0;
                             }
                         }else{
-                            console.log("list", result.length, result[0]);
                             res.render("list", {
                                 result : result,
                                 title : "All Rate"

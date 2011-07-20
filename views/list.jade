@@ -19,8 +19,11 @@ h1 All Rates
           span=item.value
       p.id _id :
         span=item._id
-      p.id id :
-        span=item.id
+
+      p.actions
+        a(href="/show/"+item._id)
+          打开
+
       p.score=item.score
     - })
 - else
