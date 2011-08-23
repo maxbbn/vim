@@ -57,6 +57,7 @@ set t_vb= " close visual bell
 set ruler " 显示标尺
 set number " 行号
 set rulerformat=%15(%c%V\ %p%%%)
+
 "搜索
 set hlsearch  " 高亮显示搜索的内容
 set noincsearch " 关闭显示查找匹配过程
@@ -84,6 +85,7 @@ set smartindent " 设置智能缩进
 " 插入模式下使用 <BS>、<Del> <C-W> <C-U>
 set backspace=indent,eol,start
 
+set mouse=a
 
 " 自动完成
 set complete=.,w,b,k,t,i
@@ -182,6 +184,8 @@ if has('syntax')
 
     " 各不同类型的文件配色不同
     "au BufNewFile,BufRead,BufEnter,WinEnter *.wiki colo moria
+
+    au BufNewFile,BufRead *.less set filetype=less
 endif
 
 " =====================
@@ -237,7 +241,7 @@ map <C-t> :tabnew<cr>
 map <C-k> :tabclose<cr>
 map <C-Tab> :tabnext<cr>
 map <C-n> :tabnext<cr>
-map <C-p> :tabprevious<cr>
+map <C-S-Tab> :tabprevious<cr>
 
 " When pressing <leader>cd switch to the directory of the open buffer
 map <leader>cd :cd %:p:h<cr>
@@ -287,3 +291,6 @@ map <c-h> ,c<space>
 
 "neo complomplache
 let g:neocomplcache_min_syntax_length = 3
+
+"web indent
+let g:js_indent_log = 0
