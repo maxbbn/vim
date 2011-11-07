@@ -118,6 +118,12 @@ set smartcase
 "
 set clipboard+=unnamed
 
+"系统剪切板
+vnoremap <c-c> "+y
+noremap <S-Del> "+p
+inoremap <S-Del> <esc>"+pa
+vnoremap <S-Del> d"+P
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Files, backups and undo
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -240,8 +246,8 @@ map <left> :bp<cr>
 map <C-t> :tabnew<cr>
 map <C-k> :tabclose<cr>
 map <C-Tab> :tabnext<cr>
-map <C-n> :tabnext<cr>
-map <C-S-Tab> :tabprevious<cr>
+map <right> :tabnext<cr>
+map <left> :tabprevious<cr>
 
 " When pressing <leader>cd switch to the directory of the open buffer
 map <leader>cd :cd %:p:h<cr>
@@ -294,3 +300,6 @@ let g:neocomplcache_min_syntax_length = 3
 
 "web indent
 let g:js_indent_log = 0
+
+"JSLint
+let g:JSLintHighlightErrorLine = 0
