@@ -15,15 +15,13 @@ endf
 func! MySys()
     return "linux"
 endf
+
 " Enable filetype plugin
-filetype plugin on
-filetype indent on
+filetype plugin indent on
 
 " Set to auto read when a file is changed from the outside
 set autoread
 
-" pathgen
-call pathogen#infect()
 
 " With a map leader it's possible to do extra key combinations
 " like <leader>w saves the current file
@@ -60,6 +58,8 @@ set t_vb= " close visual bell
 set ruler " 显示标尺
 set number " 行号
 set rulerformat=%15(%c%V\ %p%%%)
+set cursorline
+hi cursorline guibg=NONE gui=underline
 
 "搜索
 set hlsearch  " 高亮显示搜索的内容
@@ -115,7 +115,7 @@ set matchpairs=(:),{:},[:],<:>
 set whichwrap=b,s,<,>,[,]
 
 " 搜索时智能大小写
-set ignorecase
+"set ignorecase
 set smartcase
 
 "
@@ -184,7 +184,6 @@ if has('syntax')
 
     if has('gui_running')
         colorscheme zenburn
-
         let g:colors_name="zenburn"
     endif
 
@@ -300,11 +299,29 @@ map <c-h> ,c<space>
 
 "neo complomplache
 let g:neocomplcache_min_syntax_length = 3
+inoremap <expr><CR>  neocomplcache#smart_close_popup() . "\<CR>"
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
+inoremap <expr><C-y>  neocomplcache#close_popup()
+inoremap <expr><C-e>  neocomplcache#cancel_popup()
 
 "web indent
 let g:js_indent_log = 0
 
 "JSLint
-let g:JSLintHighlightErrorLine = 0
+if has('gui_running')
+    let g:JSLintHighlightErrorLine = 0
+else
+    let g:JSLintHighlightErrorLine = 0
+endif
 
-cd ~/lab
+
+" pathgen
+call pathogen#infect()
+
+
+" Gist
+let g:gist_clip_command = 'pbcopy'
