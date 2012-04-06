@@ -7,6 +7,8 @@
 " Last Modified: 2011-01-08
 "
 """"""""""""""""""""""""""""""""""
+
+
 " 获取当前目录
 func! GetPWD()
     return substitute(getcwd(), "", "", "g")
@@ -285,13 +287,6 @@ endtry
 " =====================
 "  插件配置
 " =====================
-"zencoding
-let g:user_zen_settings = {
-\  'indentation' : '    ',
-\  'lang' : 'zh-CN',
-\}
-let g:user_zen_expandabbr_key = '<c-e>'
-let g:use_zen_complete_tag = 1
 
 "NERD_commenter
 let NERDShutUp = 1
@@ -318,10 +313,7 @@ else
     let g:JSLintHighlightErrorLine = 0
 endif
 
-
-" pathgen
-call pathogen#infect()
-
-
 " Gist
 let g:gist_clip_command = 'pbcopy'
+
+call pathogen#infect()
