@@ -22,6 +22,9 @@ filetype indent on
 " Set to auto read when a file is changed from the outside
 set autoread
 
+" pathgen
+call pathogen#infect()
+
 " With a map leader it's possible to do extra key combinations
 " like <leader>w saves the current file
 let mapleader = ","
@@ -212,9 +215,9 @@ if has('gui_running')
             \set guioptions+=m <Bar>
         \endif<CR>
 
-    "if has("unix") && !has('gui_macvim')
-        "set guifont=Courier\ 11\ Pitch\ 12
-    "endif
+    if has("unix") && !has('gui_macvim')
+        set guifont=Courier\ 11\ Pitch\ 12
+    endif
 endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -303,3 +306,5 @@ let g:js_indent_log = 0
 
 "JSLint
 let g:JSLintHighlightErrorLine = 0
+
+cd ~/lab
