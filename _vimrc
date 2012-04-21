@@ -317,3 +317,6 @@ endif
 let g:gist_clip_command = 'pbcopy'
 
 call pathogen#infect()
+
+"NERD_tree
+autocmd vimenter * if !argc() | NERDTree | endif
